@@ -7,3 +7,4 @@ serv_sock = socket.socket(
 )
 
 print(type(serv_sock))   # <class 'socket.socket'>
+print(serv_sock.fileno())
