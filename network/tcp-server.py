@@ -10,7 +10,7 @@ print(type(serv_sock))   # <class 'socket.socket'>
 print(serv_sock.fileno())
 
 # bind to network interface (''/'0.0.0.0' means all interfaces) and port
-serv_sock.bind('0.0.0.0', 6543)
+serv_sock.bind(('0.0.0.0', 6543))
 
 # listen
 backlog = 10 # max number of established connections waiting for acceptance
