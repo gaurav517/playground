@@ -23,20 +23,17 @@ while True:
     print('New connection from', client_addr)
 
     print('printing peer:')
-    client_sock.getpeername()
+    print(client_sock.getpeername())
 
-    buffer = b''
-    while True:
-        data = client_sock.recv(2048)
-        if not data:
-            break
-        buffer += data
+    with client_sock:
+        with client_sock.makefile('rb') as sock_file:
+            while True:
+                line = sock_file.readline()
+                if not line:
+                    break
 
-        while b'\n' in buffer:
-            line, buffer = buffer.split(b'\n', 1)
-            if line:
+                # Strip trailing newline and echo one response per line.
+                line = line.rstrip(b'\r\n')
                 print('Request:', line.decode('utf-8'))
                 client_sock.sendall(line + b'\n')
-    
-client_sock.close()
 

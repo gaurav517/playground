@@ -10,20 +10,22 @@ client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_sock.connect(('172.16.0.2', 6543))
 
 count = 1
-while True:
-    # Send some data to server.
-    client_sock.sendall(f'Hello, world: {count}\n'.encode('utf-8'))
+with client_sock.makefile('rb') as sock_file:
+    try:
+        while True:
+            message = f'Hello, world: {count}\n'.encode('utf-8')
+            client_sock.sendall(message)
 
-    # Receive some data back.
-    chunks = []
-    while True:
-        data = client_sock.recv(2048)
-        if not data:
-            break
-        chunks.append(data)
-    print('Received', repr(b''.join(chunks)))
-    count = count + 1
-    time.sleep(2)
+            response = sock_file.readline()
+            if not response:
+                print('Server closed the connection')
+                break
+
+            print('Received', response.decode('utf-8').rstrip('\n'))
+            count += 1
+            time.sleep(2)
+    except KeyboardInterrupt:
+        pass
 
 # Disconnect from server.
 client_sock.close()
