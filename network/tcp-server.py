@@ -25,13 +25,18 @@ while True:
     print('printing peer:')
     client_sock.getpeername()
 
-    chunks = []
+    buffer = b''
     while True:
         data = client_sock.recv(2048)
         if not data:
             break
-        chunks.append(data)
-    client_sock.sendall(b''.join(chunks))
+        buffer += data
+
+        while b'\n' in buffer:
+            line, buffer = buffer.split(b'\n', 1)
+            if line:
+                print('Request:', line.decode('utf-8'))
+                client_sock.sendall(line + b'\n')
     
 client_sock.close()
 

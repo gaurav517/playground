@@ -12,8 +12,7 @@ client_sock.connect(('172.16.0.2', 6543))
 count = 1
 while True:
     # Send some data to server.
-    client_sock.sendall(f'Hello, world: {count}'.encode('utf-8'))
-    client_sock.shutdown(socket.SHUT_WR) # initiates TCP-half close
+    client_sock.sendall(f'Hello, world: {count}\n'.encode('utf-8'))
 
     # Receive some data back.
     chunks = []
