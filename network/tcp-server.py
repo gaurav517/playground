@@ -32,5 +32,6 @@ while True:
             break
         chunks.append(data)
     client_sock.sendall(b''.join(chunks))
-    client_sock.close()
+    
+client_sock.close()
 
